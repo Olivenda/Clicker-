@@ -80,11 +80,12 @@ public class UIManager implements SkinDropManager.DropListener {
         frame.add(statsPanel, BorderLayout.NORTH);
 
         JButton clickButton = buildClickButton();
+        JButton dollarButton = buildDollarButton();
 
         JPanel actionPanel = new GradientPanel();
         actionPanel.setLayout(new BorderLayout());
         actionPanel.setBorder(new EmptyBorder(16, 16, 16, 16));
-        actionPanel.add(clickButton, BorderLayout.CENTER);
+        actionPanel.add(buildActionButtonRow(clickButton, dollarButton), BorderLayout.CENTER);
         actionPanel.add(buildDropPanel(), BorderLayout.SOUTH);
         frame.add(actionPanel, BorderLayout.CENTER);
 
@@ -161,6 +162,27 @@ public class UIManager implements SkinDropManager.DropListener {
         });
 
         return clickButton;
+    }
+
+    private JButton buildDollarButton() {
+        JButton dollarButton = new JButton("Get $1");
+        dollarButton.setFont(new Font("SansSerif", Font.BOLD, 20));
+        dollarButton.setPreferredSize(new Dimension(300, 200));
+        dollarButton.setBackground(new Color(76, 193, 96));
+        dollarButton.setForeground(Color.WHITE);
+        dollarButton.setFocusPainted(false);
+        dollarButton.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
+        dollarButton.setToolTipText("Click to instantly earn $1");
+        dollarButton.addActionListener(e -> addOneDollar());
+        return dollarButton;
+    }
+
+    private JPanel buildActionButtonRow(JButton clickButton, JButton dollarButton) {
+        JPanel panel = new JPanel(new GridLayout(1, 2, 16, 0));
+        panel.setOpaque(false);
+        panel.add(clickButton);
+        panel.add(dollarButton);
+        return panel;
     }
 
     private JPanel buildDropPanel() {
@@ -335,6 +357,11 @@ public class UIManager implements SkinDropManager.DropListener {
     private void performClick() {
         clickHandler.click();
         setStatus("Energy charged!", new Color(118, 255, 206));
+    }
+
+    private void addOneDollar() {
+        gameState.addResources(1);
+        setStatus("$1 collected!", new Color(118, 255, 206));
     }
 
     @Override
